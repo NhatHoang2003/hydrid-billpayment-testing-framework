@@ -2,7 +2,6 @@ import { test, expect } from '../../../src/fixtures/apiFixture';
 import { generalCases, pageCases, limitCases, kycStatusCases, searchCases } from '../../../src/data/api/users/get-users.cases';
 import { ApiSuccessResponseSchema, ApiErrorResponseSchema } from '../../../src/schemas/common.schemas';
 import { SchemaValidator } from '../../../src/helpers/schemaValidator';
-import { ApiEvidence } from '../../../src/helpers/ApiEvidence';
 
 test.describe('GET /v1/users - List Users', () => {
 

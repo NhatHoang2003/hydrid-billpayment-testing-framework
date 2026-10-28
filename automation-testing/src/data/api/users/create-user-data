@@ -1,0 +1,225 @@
+Dưới đây là 38 test cases bổ sung cho POST /v1/users — Create User, tiếp nối 50 cases hiện tại.
+Tao sẽ đánh ID từ USER-CREATE-051 đến USER-CREATE-088, chia theo 8 nhóm để mày dễ đưa vào Google Sheets và thực thi bằng Postman.
+Lưu ý: Đây là các test scenarios đề xuất, chưa phải tất cả đều có expected result được Swagger xác nhận. Với những hành vi như trim khoảng trắng, chuẩn hóa email hoặc validate độ dài, cần kiểm tra API contract trước khi đánh PASS/FAIL.
+1. Authentication / Authorization — 4 cases
+ID	Test Scenario	Expected HTTP
+051	Create user without X-API-Key header	401
+052	Create user with invalid API Key	401 hoặc 403
+053	Create user with empty API Key	401
+054	Create user with malformed API Key value	401 hoặc 403
+2. HTTP Headers — 4 cases
+ID	Test Scenario	Expected HTTP
+055	Create user without Content-Type header	Theo API contract
+056	Create user with unsupported Content-Type: text/plain	415 hoặc 400
+057	Create user without X-Request-Id	Theo API contract
+058	Create user with custom X-Request-Id and verify response meta.requestId	201, requestId khớp
+3. Email Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+059	Create user with leading spaces in email	Theo quy tắc trim
+060	Create user with trailing spaces in email	Theo quy tắc trim
+061	Create user with uppercase email	201 nếu hợp lệ
+062	Create user with Unicode characters in email	Theo quy tắc email
+063	Create user with multiple @ symbols	400
+4. Phone Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+064	Create user with phone shorter than minimum allowed length	400 nếu có minLength
+065	Create user with phone longer than maximum allowed length	400 nếu có maxLength
+066	Create user with phone containing alphabetic characters	400
+067	Create user with phone containing unsupported special characters	400 nếu format không cho phép
+068	Create user with leading/trailing spaces in phone	Theo quy tắc trim
+5. Name Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+069	Create user with whitespace-only firstName	400 nếu bắt buộc nội dung
+070	Create user with leading spaces in firstName	Theo quy tắc trim
+071	Create user with trailing spaces in firstName	Theo quy tắc trim
+072	Create user with whitespace-only lastName	Theo quy tắc xử lý optional field
+073	Create user with special characters in lastName	201 nếu hợp lệ
+6. Address Validation — 7 cases
+ID	Test Scenario	Expected HTTP
+074	Create user with address.line1 as number	400 nếu yêu cầu string
+075	Create user with address.city as boolean	400 nếu yêu cầu string
+076	Create user with address.state as array	400 nếu yêu cầu string
+077	Create user with address.postalCode as number	400 nếu yêu cầu string
+078	Create user with address.country as object	400 nếu yêu cầu string
+079	Create user with address.line2 as boolean	400 nếu yêu cầu string
+080	Create user with address.line1 as empty string	Theo quy tắc optional/required
+Đối với các case 074–079, cần kiểm tra cả HTTP status và dữ liệu address trong response, vì backend hiện đã có hành vi bỏ qua address không hợp lệ mà vẫn trả 201.
+7. Response Validation — 5 cases
+ID	Test Scenario	Expected Result
+081	Verify successful response matches API response schema	201, schema hợp lệ
+082	Verify generated user ID is present and non-empty	201, ID hợp lệ
+083	Verify createdAt and updatedAt are valid ISO 8601 timestamps	201, timestamp hợp lệ
+084	Verify meta contains requestId, timestamp, version	201, metadata hợp lệ
+085	Verify default kycStatus when omitted	201, pending
+Lưu ý: Case 085 đã trùng nội dung với DETAIL-003 trong bộ 50 hiện tại. Nếu muốn 88 cases hoàn toàn không trùng scenario, thay case này bằng Verify meta.version equals v1 như một case kiểm tra riêng, dù vẫn có thể được kiểm tra trong case 084.
+8. Duplicate / Data Integrity — 3 cases
+ID	Test Scenario	Expected Result
+086	Create user with duplicate email but different letter casing	Theo quy tắc uniqueness
+087	Create user twice with identical request body	Lần đầu 201, lần hai 409
+088	Create users with unique emails but identical names and phone numbers	Theo quy tắc uniqueness của hệ thống
+
+Tổng hợp 88 test cases
+Test Group	Existing	Additional	Total
+Minimal User	24	0	24
+Full Details	26	0	26
+Authentication / Authorization	0	4	4
+HTTP Headers	0	4	4
+Email Validation (extended)	0	5	5
+Phone Validation (extended)	0	5	5
+Name Validation (extended)	0	5	5
+Address Validation (extended)	0	7	7
+Response Validation	0	5	5
+Duplicate / Data Integrity	0	3	3
+Total	50	38	88
+Đề xuất cách tổ chức: Giữ Minimal và Full Details là hai nhóm Functional Testing; 38 cases mới tổ chức thành các nhóm Validation, Protocol, Security và Data Integrity. Trước khi đưa vào Google Sheets chính thức, nên loại các scenario trùng nhau và xác nhận những expected result chưa có trong Swagger.
+Như vậy bộ 88 cases là danh sách coverage dự kiến, chưa phải 88 yêu cầu kiểm thử độc lập đã được xác nhận.
+
+1. Authentication / Authorization — 4 cases
+ID	Test Scenario	Expected HTTP
+051	Create user without X-API-Key header	401
+052	Create user with invalid API Key	401 hoặc 403
+053	Create user with empty API Key	401
+054	Create user with malformed API Key value	401 hoặc 403
+2. HTTP Headers — 4 cases
+ID	Test Scenario	Expected HTTP
+055	Create user without Content-Type header	Theo API contract
+056	Create user with unsupported Content-Type: text/plain	415 hoặc 400
+057	Create user without X-Request-Id	Theo API contract
+058	Create user with custom X-Request-Id and verify response meta.requestId	201, requestId khớp
+3. Email Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+059	Create user with leading spaces in email	Theo quy tắc trim
+060	Create user with trailing spaces in email	Theo quy tắc trim
+061	Create user with uppercase email	201 nếu hợp lệ
+062	Create user with Unicode characters in email	Theo quy tắc email
+063	Create user with multiple @ symbols	400
+4. Phone Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+064	Create user with phone shorter than minimum allowed length	400 nếu có minLength
+065	Create user with phone longer than maximum allowed length	400 nếu có maxLength
+066	Create user with phone containing alphabetic characters	400
+067	Create user with phone containing unsupported special characters	400 nếu format không cho phép
+068	Create user with leading/trailing spaces in phone	Theo quy tắc trim
+5. Name Validation — 5 cases
+ID	Test Scenario	Expected HTTP
+069	Create user with whitespace-only firstName	400 nếu bắt buộc nội dung
+070	Create user with leading spaces in firstName	Theo quy tắc trim
+071	Create user with trailing spaces in firstName	Theo quy tắc trim
+072	Create user with whitespace-only lastName	Theo quy tắc xử lý optional field
+073	Create user with special characters in lastName	201 nếu hợp lệ
+6. Address Validation — 7 cases
+ID	Test Scenario	Expected HTTP
+074	Create user with address.line1 as number	400 nếu yêu cầu string
+075	Create user with address.city as boolean	400 nếu yêu cầu string
+076	Create user with address.state as array	400 nếu yêu cầu string
+077	Create user with address.postalCode as number	400 nếu yêu cầu string
+078	Create user with address.country as object	400 nếu yêu cầu string
+079	Create user with address.line2 as boolean	400 nếu yêu cầu string
+080	Create user with address.line1 as empty string	Theo quy tắc optional/required
+Đối với các case 074–079, cần kiểm tra cả HTTP status và dữ liệu address trong response, vì backend hiện đã có hành vi bỏ qua address không hợp lệ mà vẫn trả 201.
+7. Response Validation — 5 cases
+ID	Test Scenario	Expected Result
+081	Verify successful response matches API response schema	201, schema hợp lệ
+082	Verify generated user ID is present and non-empty	201, ID hợp lệ
+083	Verify createdAt and updatedAt are valid ISO 8601 timestamps	201, timestamp hợp lệ
+084	Verify meta contains requestId, timestamp, version	201, metadata hợp lệ
+085	Verify default kycStatus when omitted	201, pending
+Lưu ý: Case 085 đã trùng nội dung với DETAIL-003 trong bộ 50 hiện tại. Nếu muốn 88 cases hoàn toàn không trùng scenario, thay case này bằng Verify meta.version equals v1 như một case kiểm tra riêng, dù vẫn có thể được kiểm tra trong case 084.
+8. Duplicate / Data Integrity — 3 cases
+ID	Test Scenario	Expected Result
+086	Create user with duplicate email but different letter casing	Theo quy tắc uniqueness
+087	Create user twice with identical request body	Lần đầu 201, lần hai 409
+088	Create users with unique emails but identical names and phone numbers	Theo quy tắc uniqueness của hệ thống
+
+Tổng hợp 88 test cases
+Test Group	Existing	Additional	Total
+Minimal User	24	0	24
+Full Details	26	0	26
+Authentication / Authorization	0	4	4
+HTTP Headers	0	4	4
+Email Validation (extended)	0	5	5
+Phone Validation (extended)	0	5	5
+Name Validation (extended)	0	5	5
+Address Validation (extended)	0	7	7
+Response Validation	0	5	5
+Duplicate / Data Integrity	0	3	3
+Total	50	38	88
+Đề xuất cách tổ chức: Giữ Minimal và Full Details là hai nhóm Functional Testing; 38 cases mới tổ chức thành các nhóm Validation, Protocol, Security và Data Integrity. Trước khi đưa vào Google Sheets chính thức, nên loại các scenario trùng nhau và xác nhận những expected result chưa có trong Swagger.
+Như vậy bộ 88 cases là danh sách coverage dự kiến, chưa phải 88 yêu cầu kiểm thử độc lập đã được xác nhận.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cai nay gop chung mini va detail hay sao
+
+
+
+
+
+
+
+
+
+
+
+
+
+Đúng rồi, 38 test cases mới là nhóm bổ sung chung cho endpoint POST /v1/users, không cần chia toàn bộ vào Minimal hoặc Full Details.
+Tao đề xuất tổ chức như sau:
+Test Suite	Số cases	Phạm vi
+1. Minimal User	24	Email, firstName, lastName
+2. Full Details	26	Phone, kycStatus, address
+3. Authentication & Headers	8	API Key, Content-Type, Request-ID
+4. Extended Validation	22	Email, phone, name, address
+5. Response Validation	5	Schema, ID, timestamps, metadata
+6. Data Integrity	3	Duplicate, uniqueness
+Tổng	88	
+Tại sao không gộp hết vào Minimal và Full Details?
+Ví dụ:
+- Missing API Key: Áp dụng cho cả Minimal và Full Details → chỉ cần một case riêng.
+- Email có khoảng trắng: Dùng Minimal User để kiểm tra, không cần lặp lại ở Full Details.
+- Phone quá ngắn: Thuộc Full Details vì Minimal không có phone.
+- Address sai kiểu: Thuộc Full Details.
+- Response Schema: Có thể kiểm tra cả hai dạng response trong một test case có hai bộ dữ liệu.
+Cấu trúc tao khuyên dùng trong Google Sheets
+POST /v1/users — Create User
+
+Minimal User
+
+24 cases
+
+Full Details
+
+26 cases
+
+Authentication & Headers
+
+8 cases
+
+Extended Validation
+
+22 cases
+
+Response Validation
+
+5 cases
+
+Data Integrity
+
+3 cases
+
+
+
+Chốt: 50 cases cũ + 38 cases bổ sung = 88 cases dự kiến. Nhưng cần rà soát trùng lặp trước khi chốt số lượng chính thức, đặc biệt là case kiểm tra kycStatus mặc định đã xuất hiện trong cả hai bộ.

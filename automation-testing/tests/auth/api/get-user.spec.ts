@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { AuthClient } from '../../../src/api/AuthClient';
+import { AuthClient } from '../../../src/clients/AuthClient';
 import { ApiSuccessResponseSchema } from '../../../src/schemas/common.schemas';
 
 test.describe('Authentication API', () => {

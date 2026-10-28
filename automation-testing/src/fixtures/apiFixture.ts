@@ -1,7 +1,6 @@
 import { test as base } from '@playwright/test';
-
-import { AuthClient } from '../api/AuthClient';
-import { UserClient } from '../api/UserClient';
+import { AuthClient } from '../clients/AuthClient';
+import { UserClient } from '../clients/UserClient';
 
 type ApiFixtures = {
     authClient: AuthClient;
