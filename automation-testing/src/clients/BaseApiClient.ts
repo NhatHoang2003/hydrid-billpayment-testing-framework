@@ -11,6 +11,7 @@ import {
     getAuthHeaders,
     AuthMethod,
 } from '../config/env.config';
+import { waitForRequestSlot } from '../helpers/rateLimiter';
 
 export interface RequestOptions extends AxiosRequestConfig {
     authMethod?: AuthMethod;
@@ -35,6 +36,7 @@ export class BaseApiClient {
         const authMethod =
             options.authMethod ?? env.defaultAuthMethod;
 
+        await waitForRequestSlot();
         return this.client.request<T>({
             method,
             url,
