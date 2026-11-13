@@ -50,6 +50,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Clean old Allure results
+        run: |
+          rm -rf automation-testing/allure-results
+          rm -rf automation-testing/allure-report
+          mkdir -p automation-testing/allure-results
+
       - name: Run Playwright tests
         id: playwright
         continue-on-error: true
