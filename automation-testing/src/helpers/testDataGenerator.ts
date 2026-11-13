@@ -1,4 +1,8 @@
 import { randomUUID } from "crypto";
+import { ApiSuccessResponseSchema } from "../schemas/common.schemas";
+import { SchemaValidator } from "./schemaValidator";
+import { UserClient } from "../clients/user.client";
+import { expect } from "@playwright/test";
 
 export function generateUniqueEmail(prefix = 'test-user'): string {
     return `${prefix}.${Math.random()
@@ -21,4 +25,22 @@ export function generateEmailWithLength(length: number): string {
         .slice(0, localPartLength);
 
     return `${localPart}${domain}`;
+}
+
+async function createDisposableUser(userClient: UserClient): Promise<string> {
+    const response = await userClient.postUser({
+        email: generateUniqueEmail(),
+        firstName: 'Delete',
+        lastName: 'Test',
+    });
+
+    expect(response.status).toBe(201);
+
+    await SchemaValidator.validate(
+        ApiSuccessResponseSchema,
+        response.data,
+        'POST /v1/users - Create disposable user',
+    );
+
+    return response.data.data.id;
 }

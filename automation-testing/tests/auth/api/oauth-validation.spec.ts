@@ -1,4 +1,4 @@
-import { test, expect } from '../../../src/fixtures/apiFixture';
+import { test, expect } from '../../../src/fixtures/api.fixture';
 import { SchemaValidator } from '../../../src/helpers/schemaValidator';
 import { ApiErrorResponseSchema } from '../../../src/schemas/common.schemas';
 

@@ -1,4 +1,4 @@
-import { test, expect } from '../../../src/fixtures/apiFixture';
+import { test, expect } from '../../../src/fixtures/api.fixture';
 
 import { ApiSuccessResponseSchema, ApiErrorResponseSchema } from '../../../src/schemas/common.schemas';
 import { SchemaValidator } from '../../../src/helpers/schemaValidator';
@@ -13,21 +13,21 @@ import {
     phoneValidationCases,
     nameValidationCases,
     addressValidationCases
-} from '../../../src/data/api/users/create-user-cases';
+} from '../../../src/data/api/users/post-create-user.data';
 
 test.describe('POST /v1/users - Create User', () => {
 
     // ===== 1. Minimal User (USER-053 -> 076) =====
     for (const testCase of miniUserPositiveCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.postUser(testCase.payload);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.postUser(testCase.payload);
 
             // await ApiEvidence.attach(
             //     'POST /v1/users',
@@ -57,14 +57,14 @@ test.describe('POST /v1/users - Create User', () => {
 
     for (const testCase of miniUserNegativeCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.postUser(testCase.payload);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.postUser(testCase.payload);
 
             // await ApiEvidence.attach(
             //     'POST /v1/users',
@@ -127,14 +127,14 @@ test.describe('POST /v1/users - Create User', () => {
     // ===== 2. Full Details (USER-077 -> 102) =====
     for (const testCase of detailUserPositiveCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.postUser(testCase.payload);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.postUser(testCase.payload);
 
             // await ApiEvidence.attach(
             //     'POST /v1/users',
@@ -164,14 +164,14 @@ test.describe('POST /v1/users - Create User', () => {
 
     for (const testCase of detailUserNegativeCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.postUser(testCase.payload);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.postUser(testCase.payload);
 
             // await ApiEvidence.attach(
             //     'POST /v1/users',
@@ -347,10 +347,10 @@ test.describe('POST /v1/users - Create User', () => {
                 { headers: { 'X-Request-Id': 'test-create-user-109' } }
             );
 
-            test.fixme(
-                true,
-                'BUG-REQUEST-ID-META-MISMATCH: meta.requestId does not match the submitted X-Request-Id'
-            );
+            // test.fixme(
+            //     true,
+            //     'BUG-REQUEST-ID-META-MISMATCH: meta.requestId does not match the submitted X-Request-Id'
+            // );
 
             // console.log('header:', response.headers['x-request-id'], '| body:', response.data.meta.requestId);
 

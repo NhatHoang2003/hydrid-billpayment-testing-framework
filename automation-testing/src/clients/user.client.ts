@@ -1,6 +1,6 @@
-import { CreateUserRequest, GetUsersParams, UserResponse, UsersListResponse } from "../types/user.types";
+import { CreateUserRequest, GetUsersParams, PatchUserRequest, UpdateUserRequest, UserResponse, UsersListResponse } from "../types/user.types";
 
-import { BaseApiClient, RequestOptions } from "./BaseApiClient";
+import { BaseApiClient, RequestOptions } from "./base.client";
 
 export class UserClient extends BaseApiClient {
 
@@ -35,6 +35,30 @@ export class UserClient extends BaseApiClient {
         return this.get<UserResponse>(
             `/v1/users/${userId}`,
             options
+        );
+    }
+
+    async putUser(
+        userId: string,
+        payload?: UpdateUserRequest | Record<string, unknown>,
+        options: RequestOptions = {},
+    ) {
+        return this.put<UserResponse>(
+            `/v1/users/${encodeURIComponent(userId)}`,
+            payload,
+            options,
+        );
+    }
+
+    async patchUser(
+        userId: string,
+        payload?: PatchUserRequest | Record<string, unknown>,
+        options: RequestOptions = {},
+    ) {
+        return this.patch<UserResponse>(
+            `/v1/users/${encodeURIComponent(userId)}`,
+            payload,
+            options,
         );
     }
 

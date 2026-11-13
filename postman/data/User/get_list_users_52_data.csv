@@ -1,0 +1,53 @@
+﻿testCaseId,page,limit,kyc_status,search,unknown_param,expectedStatus,bugId,note
+USER-001,,,,,,200,,200 OK; users are returned with default pagination page=1 and limit=10.
+USER-002,2,,,,,200,,200 OK; users are returned for page=2.
+USER-003,,20,,,,200,,200 OK; users are returned with limit=20.
+USER-004,2,15,,,,200,,200 OK; users are returned for page=2 and limit=15.
+USER-005,1,10,verified,__EMPTY__,,200,,200 OK; users are returned with the provided valid query parameters.
+USER-006,1,,,,,200,,200 OK; page=1 is accepted and hasPrev=false.
+USER-007,__MIDDLE_PAGE__,,,,,200,,200 OK; the dynamically calculated middle page is accepted.
+USER-008,__LAST_PAGE__,,,,,200,,200 OK; the dynamically determined current maximum page is accepted.
+USER-009,__NEXT_PAGE__,,,,,200,,200 OK; an out-of-range page is handled by the API.
+USER-010,__FAR_PAGE__,,,,,200,,200 OK; a page far beyond totalPages is handled by the API.
+USER-011,0,,,,,400,BUG-001,200 OK; page=0 is accepted instead of being rejected with 400.
+USER-012,-1,,,,,400,BUG-002,200 OK; page=-1 is accepted instead of being rejected with 400.
+USER-013,1.5,,,,,400,BUG-003,200 OK; page=1.5 is accepted instead of being rejected with 400.
+USER-014,abc,,,,,400,BUG-004,"500 Internal Server Error is returned for non-numeric page=""abc"" instead of 400 Bad Request."
+USER-015,__EMPTY__,,,,,400,BUG-005,200 OK; empty page value is accepted instead of being rejected with 400.
+USER-016,9007199254740992,,,,,400,BUG-006,200 OK; page=9007199254740992 is accepted instead of being rejected with 400.
+USER-017,true,,,,,400,BUG-007,500 Internal Server Error is returned for page=true instead of 400 Bad Request.
+USER-018,"[1,2]",,,,,400,BUG-008,200 OK; array page value is accepted instead of being rejected with 400.
+USER-019,,1,,,,200,,200 OK; limit=1 is accepted.
+USER-020,,50,,,,200,,200 OK; limit=50 is accepted.
+USER-021,,100,,,,200,,200 OK; limit=100 is accepted.
+USER-022,,101,,,,400,BUG-009,200 OK; limit=101 is accepted instead of being rejected with 400.
+USER-023,,0,,,,400,BUG-010,200 OK; limit=0 is accepted instead of being rejected with 400.
+USER-024,,-10,,,,400,BUG-011,200 OK; limit=-10 is accepted instead of being rejected with 400.
+USER-025,,10.5,,,,400,BUG-012,200 OK; limit=10.5 is accepted instead of being rejected with 400.
+USER-026,,ten,,,,400,BUG-013,"500 Internal Server Error is returned for limit=""ten"" instead of 400 Bad Request."
+USER-027,,__EMPTY__,,,,400,BUG-014,200 OK; empty limit value is accepted instead of being rejected with 400.
+USER-028,,9999999999,,,,400,BUG-015,200 OK; limit=9999999999 is accepted instead of being rejected with 400.
+USER-029,,"[10,20]",,,,400,BUG-016,200 OK; array limit value is accepted instead of being rejected with 400.
+USER-030,,false,,,,400,BUG-017,500 Internal Server Error is returned for limit=false instead of 400 Bad Request.
+USER-031,,,approved,,,400,BUG-018,"200 OK; kyc_status=""approved"" is accepted instead of being rejected with 400."
+USER-032,,,VERIFIED,,,400,BUG-019,"200 OK; kyc_status=""VERIFIED"" is accepted instead of being rejected with 400."
+USER-033,,,1,,,400,BUG-020,200 OK; numeric kyc_status=1 is accepted instead of being rejected with 400.
+USER-034,,,__EMPTY__,,,400,BUG-021,200 OK; empty kyc_status value is accepted instead of being rejected with 400.
+USER-035,,,"[""verified"",""pending""]",,,400,BUG-022,200 OK; array kyc_status value is accepted instead of being rejected with 400.
+USER-036,,,,Nguyễn Văn A,,200,,"200 OK; users matching the full name ""Nguyễn Văn A"" are returned."
+USER-037,,,,Nguyễn Văn,,200,,"200 OK; users matching the partial name ""Nguyễn Văn"" are returned."
+USER-038,,,,Nguyễn,,200,,"200 OK; users matching the name keyword ""Nguyễn"" are returned."
+USER-039,,,,Nguyễn Văn B,,200,,"200 OK; no matching user is found for ""Nguyễn Văn B""."
+USER-040,,,,hoang@gmail.com,,200,,"200 OK; user matching the full email ""hoang\@gmail.com"" is returned."
+USER-041,,,,hoang,,200,,"200 OK; users matching the partial email ""hoang"" are returned."
+USER-042,,,,gmail.com,,200,,"200 OK; users matching the email domain ""gmail.com"" are returned."
+USER-043,,,,__DYNAMIC_PHONE__,,200,,200 OK; user matching the dynamically retrieved full phone number is returned.
+USER-044,,,,84394267205,,200,,"200 OK; user matching phone number ""84394267205"" is returned."
+USER-045,,,,394267205,,200,,"200 OK; users matching partial phone number ""394267205"" are returned."
+USER-046,,,,__EMPTY__,,200,,200 OK; empty search value is accepted and users are returned.
+USER-047,,,,NGUYỄN VĂN A,,200,,"200 OK; name search with ""NGUYỄN VĂN A"" returns the expected matching user."
+USER-048,__MIDDLE_PAGE__,10,,,,200,,200 OK; pagination values are returned for the dynamically selected middle page.
+USER-049,,10,,,,200,,200 OK; the returned user count does not exceed the requested limit.
+USER-050,,,,,,200,,200 OK; totalPages matches ceil(total / limit).
+USER-051,,,,,,200,,200 OK; response contains the expected root structure and field types.
+USER-052,,,,,test,200,,"200 OK; unknown_param=""test"" is ignored and the request is processed successfully."

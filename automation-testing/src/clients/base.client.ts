@@ -4,6 +4,7 @@ import axios, {
     AxiosResponse,
     Method,
 } from 'axios';
+
 import { randomUUID } from 'crypto';
 
 import {
@@ -43,8 +44,8 @@ export class BaseApiClient {
             ...options,
             headers: {
                 ...getAuthHeaders(authMethod),
-                ...options.headers,
                 'X-Request-Id': randomUUID(),
+                ...options.headers,
             },
         });
     }
