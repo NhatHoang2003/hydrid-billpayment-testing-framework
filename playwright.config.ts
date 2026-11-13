@@ -14,7 +14,7 @@ export default defineConfig({
 
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : Number(process.env.API_RETRIES ?? 0),
+  retries: process.env.CI ? 2 : Number(process.env.API_RETRIES ?? 0),
   workers: process.env.CI ? 1 : undefined,
 
   reporter: [
@@ -23,7 +23,7 @@ export default defineConfig({
       'html',
       {
         outputFolder: './automation-testing/playwright-report',
-        open: 'never',
+        open: 'on-failure',
       },
     ],
     [
@@ -38,6 +38,9 @@ export default defineConfig({
     {
       name: 'api',
       testMatch: '**/api/**/*.spec.ts',
+      // Keep the shared API key's rolling-window limiter effective across all
+      // API specs (Playwright workers are separate processes).
+      workers: 1,
     },
     {
       name: 'chromium',

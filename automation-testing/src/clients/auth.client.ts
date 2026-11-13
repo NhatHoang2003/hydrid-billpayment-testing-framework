@@ -1,5 +1,5 @@
 import { TokenRequest, TokenResponse } from '../types/auth.types';
-import { BaseApiClient, RequestOptions } from './BaseApiClient';
+import { BaseApiClient, RequestOptions } from './base.client';
 
 export class AuthClient extends BaseApiClient {
     async getCurrentUser() {

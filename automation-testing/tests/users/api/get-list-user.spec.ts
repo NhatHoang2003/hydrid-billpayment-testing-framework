@@ -1,5 +1,11 @@
-import { test, expect } from '../../../src/fixtures/apiFixture';
-import { generalCases, pageCases, limitCases, kycStatusCases, searchCases } from '../../../src/data/api/users/get-users.cases';
+import { test, expect } from '../../../src/fixtures/api.fixture';
+import {
+    generalCases,
+    pageCases,
+    limitCases,
+    kycStatusCases,
+    searchCases
+} from '../../../src/data/api/users/get-user.data';
 import { ApiSuccessResponseSchema, ApiErrorResponseSchema } from '../../../src/schemas/common.schemas';
 import { SchemaValidator } from '../../../src/helpers/schemaValidator';
 
@@ -23,15 +29,14 @@ test.describe('GET /v1/users - List Users', () => {
 
     for (const testCase of pageCases) {
         test(testCase.name, async ({ userClient }) => {
-
-            const response = await userClient.getListUser(testCase.params);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.getListUser(testCase.params);
 
             // await ApiEvidence.attach(
             //     'GET /v1/users',
@@ -182,9 +187,6 @@ test.describe('GET /v1/users - List Users', () => {
 
     for (const testCase of limitCases) {
         test(testCase.name, async ({ userClient }) => {
-
-            const response = await userClient.getListUser(testCase.params);
-
             // Debugging
             // console.log('baseURL:', response.config.baseURL);
             // console.log('url:', response.config.url);
@@ -199,6 +201,8 @@ test.describe('GET /v1/users - List Users', () => {
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.getListUser(testCase.params);
 
             // await ApiEvidence.attach(
             //     'GET /v1/users',
@@ -228,14 +232,14 @@ test.describe('GET /v1/users - List Users', () => {
 
     for (const testCase of kycStatusCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.getListUser(testCase.params);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.getListUser(testCase.params);
 
             // await ApiEvidence.attach(
             //     'GET /v1/users',
@@ -265,14 +269,14 @@ test.describe('GET /v1/users - List Users', () => {
 
     for (const testCase of searchCases) {
         test(testCase.name, async ({ userClient }) => {
-            const response = await userClient.getListUser(testCase.params);
-
             if ('bug' in testCase && testCase.bug) {
                 test.fixme(
                     true,
                     `${testCase.bug}: Backend validation bug`
                 );
             }
+
+            const response = await userClient.getListUser(testCase.params);
 
             // await ApiEvidence.attach(
             //     'GET /v1/users',
